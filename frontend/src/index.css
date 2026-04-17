@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', 'Circular', system-ui, -apple-system, sans-serif;
+  background-color: #171717;
+  color: #fafafa;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #171717;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #363636;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3ecf8e;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+
+.glass {
+  background: rgba(41, 41, 41, 0.84);
+  backdrop-filter: blur(20px);
+  border: 1px solid #2e2e2e;
+}
+
+.pill-btn {
+  padding: 8px 32px;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.14;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.pill-btn-primary {
+  background: #0f0f0f;
+  color: #fafafa;
+  border: 1px solid #fafafa;
+}
+
+.pill-btn-primary:hover {
+  background: #171717;
+  border-color: #3ecf8e;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+.pill-btn-secondary {
+  background: #0f0f0f;
+  color: #fafafa;
+  border: 1px solid #2e2e2e;
+  opacity: 0.9;
+}
+
+.pill-btn-secondary:hover {
+  opacity: 1;
+  border-color: #363636;
+}
+
+.pill-btn-ghost {
+  background: transparent;
+  color: #fafafa;
+  border: 1px solid transparent;
+  padding: 8px;
+}
+
+.pill-btn-ghost:hover {
+  background: rgba(41, 41, 41, 0.5);
+  border-color: #2e2e2e;
+}
+
+.card {
+  background: #171717;
+  border: 1px solid #2e2e2e;
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+  border-color: rgba(62, 207, 142, 0.3);
+}
+
+.input-field {
+  width: 100%;
+  background: #0f0f0f;
+  border: 1px solid #2e2e2e;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #fafafa;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.input-field::placeholder {
+  color: #898989;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #3ecf8e;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+.label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #b4b4b4;
+  margin-bottom: 8px;
+}
+
+.text-hero {
+  font-size: 72px;
+  font-weight: 400;
+  line-height: 1.00;
+  letter-spacing: -0.02em;
+}
+
+.text-section {
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.text-card-title {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.33;
+  letter-spacing: -0.16px;
+}
+
+.text-nav {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.43;
+}
+
+.text-code {
+  font-family: 'Source Code Pro', Menlo, monospace;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.33;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.border-glass {
+  border-color: rgba(62, 207, 142, 0.3);
+}

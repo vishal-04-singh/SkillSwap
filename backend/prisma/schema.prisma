@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  roll_number   String    @unique
+  full_name     String
+  email         String    @unique
+  password_hash String
+  role          String    @default("student")
+  department    String?
+  avg_rating    Float     @default(0)
+  created_at    DateTime  @default(now())
+
+  user_skills       UserSkill[]
+  mentor_sessions   SkillSession[] @relation("MentorSessions")
+  mentee_sessions   SkillSession[] @relation("MenteeSessions")
+  reviews           SessionReview[] @relation("ReviewerReviews")
+  notifications     Notification[]
+}
+
+model SkillCategory {
+  id   String  @id @default(auto()) @map("_id") @db.ObjectId
+  name String  @unique
+
+  skills Skill[]
+}
+
+model Skill {
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  categoryId String?       @db.ObjectId
+  category   SkillCategory? @relation(fields: [categoryId], references: [id])
+
+  user_skills UserSkill[]
+  sessions    SkillSession[]
+}
+
+model UserSkill {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId              String   @db.ObjectId
+  skillId             String   @db.ObjectId
+  proficiency_level   String
+  years_of_experience Int      @default(0)
+  created_at          DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillId])
+}
+
+model SkillSession {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  mentorId       String   @db.ObjectId
+  menteeId       String   @db.ObjectId
+  skillId        String   @db.ObjectId
+  title          String
+  description    String?
+  scheduled_date DateTime
+  status         String   @default("pending")
+  created_at     DateTime @default(now())
+
+  mentor User            @relation("MentorSessions", fields: [mentorId], references: [id], onDelete: Cascade)
+  mentee User            @relation("MenteeSessions", fields: [menteeId], references: [id], onDelete: Cascade)
+  skill  Skill           @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  review SessionReview?
+}
+
+model SessionReview {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId  String   @unique @db.ObjectId
+  reviewerId String   @db.ObjectId
+  rating     Float
+  comment    String?
+  created_at DateTime @default(now())
+
+  session  SkillSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  reviewer User         @relation("ReviewerReviews", fields: [reviewerId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String   @db.ObjectId
+  message    String
+  is_read    Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
