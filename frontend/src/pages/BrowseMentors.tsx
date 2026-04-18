@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Search, Users } from 'lucide-react';
 import Layout from '../components/Layout';
 import MentorCard from '../components/MentorCard';

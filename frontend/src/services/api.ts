@@ -36,33 +36,33 @@ export const authApi = {
 };
 
 export const skillsApi = {
-  getAll: (categoryId?: number) => 
+  getAll: (categoryId?: string) => 
     categoryId ? api.get(`/skills?category_id=${categoryId}`) : api.get('/skills'),
   getCategories: () => api.get('/skills/categories'),
-  getUserSkills: (userId: number) => api.get(`/skills/users/${userId}`),
-  searchUsers: (params: { skill_id?: number; q?: string }) => api.get('/skills/users/search', { params }),
+  getUserSkills: (userId: string) => api.get(`/skills/users/${userId}`),
+  searchUsers: (params: { skill_id?: string; q?: string }) => api.get('/skills/users/search', { params }),
   addSkill: (data: any) => api.post('/skills', data),
-  updateSkill: (id: number, data: any) => api.patch(`/skills/${id}`, data),
-  deleteSkill: (id: number) => api.delete(`/skills/${id}`),
+  updateSkill: (id: string, data: any) => api.patch(`/skills/${id}`, data),
+  deleteSkill: (id: string) => api.delete(`/skills/${id}`),
 };
 
 export const sessionsApi = {
   getAll: () => api.get('/sessions'),
-  getById: (id: number) => api.get(`/sessions/${id}`),
+  getById: (id: string) => api.get(`/sessions/${id}`),
   create: (data: any) => api.post('/sessions', data),
-  updateStatus: (id: number, status: string) => api.patch(`/sessions/${id}/status`, { status }),
+  updateStatus: (id: string, status: string) => api.patch(`/sessions/${id}/status`, { status }),
   getStats: () => api.get('/sessions/stats'),
 };
 
 export const reviewsApi = {
   create: (data: any) => api.post('/reviews', data),
-  getMentorReviews: (mentorId: number) => api.get(`/reviews/mentor/${mentorId}`),
+  getMentorReviews: (mentorId: string) => api.get(`/reviews/mentor/${mentorId}`),
   getLeaderboard: () => api.get('/reviews/leaderboard'),
 };
 
 export const notificationsApi = {
   getAll: () => api.get('/notifications'),
-  markAsRead: (id: number) => api.patch(`/notifications/${id}/read`),
+  markAsRead: (id: string) => api.patch(`/notifications/${id}/read`),
   markAllAsRead: () => api.patch('/notifications/read-all'),
 };
 

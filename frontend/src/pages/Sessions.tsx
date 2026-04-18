@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import Layout from '../components/Layout';
 import SessionCard from '../components/SessionCard';
 import Modal from '../components/Modal';

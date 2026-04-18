@@ -35,8 +35,8 @@ export default function Login() {
         className="w-full max-w-md"
       >
         <div className="text-center mb-10">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: '#3ecf8e' }}>
-            <span className="text-black font-bold text-2xl">SS</span>
+          <div className="rounded-2xl flex items-center justify-center mx-auto mb-5" >
+            <img src="/logo_text.jpeg" alt="SkillSwap Logo" className="w-400 h-10 object-contain" />
           </div>
           <h1 className="text-4xl font-normal mb-3" style={{ letterSpacing: '-0.02em' }}>Welcome back</h1>
           <p className="text-lg" style={{ color: '#898989' }}>Sign in to your SkillSwap account</p>

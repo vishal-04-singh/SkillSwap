@@ -4,16 +4,14 @@ import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import Layout from '../components/Layout';
 import Modal from '../components/Modal';
-import { useAuth } from '../context/AuthContext';
+
 import { skillsApi, sessionsApi } from '../services/api';
 import toast from 'react-hot-toast';
-import { Skill, UserSkill } from '../types';
+import { UserSkill } from '../types';
 
 export default function BookSession() {
   const { mentorId } = useParams<{ mentorId: string }>();
-  const { user } = useAuth();
   const [mentorSkills, setMentorSkills] = useState<UserSkill[]>([]);
-  const [allSkills, setAllSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<UserSkill | null>(null);
@@ -30,12 +28,8 @@ export default function BookSession() {
 
   const fetchData = async () => {
     try {
-      const [skillsRes, allSkillsRes] = await Promise.all([
-        skillsApi.getUserSkills(Number(mentorId)),
-        skillsApi.getAll(),
-      ]);
+      const skillsRes = await skillsApi.getUserSkills(mentorId as string);
       setMentorSkills(skillsRes.data.data);
-      setAllSkills(allSkillsRes.data.data);
     } catch (error) {
       toast.error('Failed to load mentor data');
     } finally {
@@ -50,7 +44,7 @@ export default function BookSession() {
     try {
       const scheduledDate = new Date(`${formData.scheduled_date}T${formData.scheduled_time}`);
       await sessionsApi.create({
-        mentor_id: Number(mentorId),
+        mentor_id: mentorId as string,
         skill_id: selectedSkill.skill_id,
         title: formData.title,
         description: formData.description,
@@ -66,9 +60,7 @@ export default function BookSession() {
     }
   };
 
-  const filteredSkills = allSkills.filter(
-    (s) => !mentorSkills.some((ms) => ms.skill_id === s.skill_id)
-  );
+  
 
   return (
     <Layout>

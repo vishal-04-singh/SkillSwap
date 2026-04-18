@@ -31,7 +31,7 @@ export default function MySkills() {
   const fetchData = async () => {
     try {
       const [skillsRes, allSkillsRes, categoriesRes] = await Promise.all([
-        skillsApi.getUserSkills(user!.user_id),
+        skillsApi.getUserSkills(user!.user_id as string),
         skillsApi.getAll(),
         skillsApi.getCategories(),
       ]);
@@ -65,7 +65,7 @@ export default function MySkills() {
 
   const handleDelete = async (userSkillId: string) => {
     try {
-      await skillsApi.deleteSkill(userSkillId);
+      await skillsApi.deleteSkill(userSkillId as string);
       toast.success('Skill removed');
       fetchData();
     } catch (error: any) {
@@ -75,11 +75,11 @@ export default function MySkills() {
   };
 
   const filteredSkills = selectedCategory
-    ? allSkills.filter((s) => s.category_id === selectedCategory || s.categoryId === selectedCategory)
+    ? allSkills.filter((s) => s.category_id === selectedCategory)
     : allSkills;
 
   const availableSkills = filteredSkills.filter(
-    (skill) => !skills.some((s) => s.skill_id === skill.skill_id || s.skillId === skill.skillId)
+    (skill) => !skills.some((s) => s.skill_id === skill.skill_id)
   );
 
   return (

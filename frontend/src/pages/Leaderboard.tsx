@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Trophy, Star, Users, Calendar } from 'lucide-react';
+import { Trophy, Star, Calendar } from 'lucide-react';
 import Layout from '../components/Layout';
 import { reviewsApi } from '../services/api';
 import toast from 'react-hot-toast';

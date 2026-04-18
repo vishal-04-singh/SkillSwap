@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { BookOpen, Calendar, Star, Bell } from 'lucide-react';
 import Layout from '../components/Layout';
 import StatCard from '../components/StatCard';
