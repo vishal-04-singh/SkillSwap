@@ -255,4 +255,4 @@ MCA Sem-II Project - Educational Purpose
 
 ## Author
 
-**Vishal Singh** , [**Chirag Varshney**](https://github.com/cvxlogic) and **Aryan Joshi** | MCA Sem-II | Full-Stack Application with Database Integration
+**Vishal Singh** , **Chirag Varshney** and **Aryan Joshi** | MCA Sem-II | Full-Stack Application with Database Integration

@@ -520,6 +520,6 @@ The application is production-ready and can be deployed with proper environment 
 
 ---
 
-**Submitted by:** **Vishal Singh** ,[**Chirag Varshney**](https://github.com/cvxlogic) and **Aryan Joshi**
+**Submitted by:** **Vishal Singh** ,**Chirag Varshney** and **Aryan Joshi**
 **Roll Number: 590028039, 590024860 and 590028005**
 **Date:** April 17, 2026
