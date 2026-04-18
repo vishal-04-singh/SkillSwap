@@ -44,7 +44,7 @@ export default function MentorCard({ mentor, onSelect, showSkills = true }: Ment
             <div className="flex flex-wrap gap-2 mt-3">
               {skills.map((us) => (
                 <span
-                  key={us.user_skill_id}
+                  key={us.id}
                   className="px-2 py-1 rounded-full text-xs flex items-center gap-1"
                   style={{ background: '#0f0f0f', color: '#b4b4b4' }}
                 >

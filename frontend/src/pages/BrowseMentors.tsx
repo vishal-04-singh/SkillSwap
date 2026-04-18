@@ -61,7 +61,7 @@ export default function BrowseMentors() {
   }, [searchQuery, selectedSkill]);
 
   const filteredSkills = selectedCategory
-    ? allSkills.filter((s) => s.category_id === selectedCategory || s.categoryId === selectedCategory)
+    ? allSkills.filter((s) => s.categoryId === selectedCategory)
     : allSkills;
 
   return (
@@ -94,7 +94,7 @@ export default function BrowseMentors() {
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
-              <option key={cat.category_id || cat.id} value={cat.category_id || cat.id}>
+              <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>
             ))}
@@ -108,7 +108,7 @@ export default function BrowseMentors() {
           >
             <option value="">All Skills</option>
             {filteredSkills.map((skill) => (
-              <option key={skill.skill_id || skill.id} value={skill.skill_id || skill.id}>
+              <option key={skill.id} value={skill.id}>
                 {skill.name}
               </option>
             ))}
@@ -161,7 +161,7 @@ export default function BrowseMentors() {
               <h4 className="font-medium mb-2">Skills</h4>
               <div className="flex flex-wrap gap-2">
                 {selectedMentor.user_skills?.map((us) => (
-                  <span key={us.user_skill_id} className="px-3 py-1 rounded-full text-sm" style={{ background: '#0f0f0f' }}>
+                  <span key={us.id} className="px-3 py-1 rounded-full text-sm" style={{ background: '#0f0f0f' }}>
                     {us.skill.name} • {us.proficiency_level}
                   </span>
                 ))}

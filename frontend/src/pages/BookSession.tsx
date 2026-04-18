@@ -45,7 +45,7 @@ export default function BookSession() {
       const scheduledDate = new Date(`${formData.scheduled_date}T${formData.scheduled_time}`);
       await sessionsApi.create({
         mentor_id: mentorId as string,
-        skill_id: selectedSkill.skill_id,
+        skillId: selectedSkill.skillId,
         title: formData.title,
         description: formData.description,
         scheduled_date: scheduledDate.toISOString(),
@@ -85,7 +85,7 @@ export default function BookSession() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {mentorSkills.map((us) => (
                   <motion.div
-                    key={us.user_skill_id}
+                    key={us.id}
                     whileHover={{ scale: 1.02 }}
                     className="card card-hover cursor-pointer"
                     onClick={() => {

@@ -11,27 +11,23 @@ export interface User {
 }
 
 export interface Skill {
-  skill_id: string;
-  id?: string;
+  id: string;
   name: string;
-  category_id?: string;
-  category?: SkillCategory;
   categoryId?: string;
+  category?: SkillCategory;
   _count?: { user_skills: number };
 }
 
 export interface SkillCategory {
-  category_id: number;
-  id?: string;
+  id: string;
   name: string;
   _count?: { skills: number };
 }
 
 export interface UserSkill {
-  user_skill_id: string;
-  id?: string;
-  user_id: string;
-  skill_id: string;
+  id: string;
+  userId: string;
+  skillId: string;
   proficiency_level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
   years_of_experience: number;
   skill: Skill;

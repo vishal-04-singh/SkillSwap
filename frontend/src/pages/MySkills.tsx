@@ -19,7 +19,7 @@ export default function MySkills() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    skill_id: '',
+    skillId: '',
     proficiency_level: 'intermediate',
     years_of_experience: 1,
   });
@@ -49,13 +49,13 @@ export default function MySkills() {
     e.preventDefault();
     try {
       await skillsApi.addSkill({
-        skill_id: formData.skill_id,
+        skillId: formData.skillId,
         proficiency_level: formData.proficiency_level,
         years_of_experience: Number(formData.years_of_experience),
       });
       toast.success('Skill added successfully!');
       setModalOpen(false);
-      setFormData({ skill_id: '', proficiency_level: 'intermediate', years_of_experience: 1 });
+      setFormData({ skillId: '', proficiency_level: 'intermediate', years_of_experience: 1 });
       fetchData();
     } catch (error: any) {
       const message = error?.response?.data?.error || error?.message || 'Failed to add skill';
@@ -75,11 +75,11 @@ export default function MySkills() {
   };
 
   const filteredSkills = selectedCategory
-    ? allSkills.filter((s) => s.category_id === selectedCategory)
+    ? allSkills.filter((s) => s.categoryId === selectedCategory)
     : allSkills;
 
   const availableSkills = filteredSkills.filter(
-    (skill) => !skills.some((s) => s.skill_id === skill.skill_id)
+    (skill) => !skills.some((s) => s.skillId === skill.id)
   );
 
   return (
@@ -104,7 +104,7 @@ export default function MySkills() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {skills.map((userSkill) => (
               <motion.div
-                key={userSkill.user_skill_id}
+                key={userSkill.id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="card card-hover"
@@ -120,7 +120,7 @@ export default function MySkills() {
                     </div>
                   </div>
                   <button
-                    onClick={() => handleDelete(userSkill.user_skill_id)}
+                    onClick={() => handleDelete(userSkill.id)}
                     className="p-2 rounded-lg transition-colors"
                     style={{ color: '#898989' }}
                   >
@@ -161,7 +161,7 @@ export default function MySkills() {
             >
               <option value="">All Categories</option>
               {categories.map((cat) => (
-                <option key={cat.category_id || cat.id} value={cat.category_id || cat.id}>
+                <option key={cat.id} value={cat.id}>
                   {cat.name}
                 </option>
               ))}
@@ -171,14 +171,14 @@ export default function MySkills() {
           <div>
             <label className="label">Skill</label>
             <select
-              value={formData.skill_id}
-              onChange={(e) => setFormData({ ...formData, skill_id: e.target.value })}
+              value={formData.skillId}
+              onChange={(e) => setFormData({ ...formData, skillId: e.target.value })}
               className="input-field"
               required
             >
               <option value="">Select a skill</option>
               {availableSkills.map((skill) => (
-                <option key={skill.skill_id || skill.id} value={skill.skill_id || skill.id}>
+                <option key={skill.id} value={skill.id}>
                   {skill.name}
                 </option>
               ))}
