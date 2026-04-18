@@ -68,13 +68,13 @@ export default function BrowseMentors() {
     <Layout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-4xl font-normal mb-2" style={{ letterSpacing: '-0.02em' }}>Browse Mentors</h1>
-          <p style={{ color: '#898989' }}>Find experts to learn from.</p>
+          <h1 className="text-4xl font-normal mb-2 gradient-text" style={{ letterSpacing: '-0.02em' }}>Browse Mentors</h1>
+          <p style={{ color: 'rgba(255,255,255,0.5)' }}>Find experts to learn from.</p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2" size={20} style={{ color: '#898989' }} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2" size={20} style={{ color: 'rgba(255,255,255,0.3)' }} />
             <input
               type="text"
               placeholder="Search by name, email, or department..."
@@ -117,7 +117,7 @@ export default function BrowseMentors() {
 
         {loading ? (
           <div className="flex items-center justify-center h-64">
-            <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: '#3ecf8e', borderTopColor: 'transparent' }} />
+            <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(62,207,142,0.3)', borderTopColor: '#3ecf8e' }} />
           </div>
         ) : mentors.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -126,14 +126,15 @@ export default function BrowseMentors() {
                 key={mentor.user_id}
                 mentor={mentor}
                 onSelect={() => setSelectedMentor(mentor)}
+                showFavorite={true}
               />
             ))}
           </div>
         ) : (
-          <div className="card text-center py-16">
-            <Users size={48} className="mx-auto mb-4" style={{ color: '#4d4d4d' }} />
+          <div className="glass-card text-center py-16">
+            <Users size={48} className="mx-auto mb-4" style={{ color: 'rgba(255,255,255,0.2)' }} />
             <h3 className="text-xl font-normal mb-2">No mentors found</h3>
-            <p style={{ color: '#898989' }}>Try adjusting your search filters.</p>
+            <p style={{ color: 'rgba(255,255,255,0.5)' }}>Try adjusting your search filters.</p>
           </div>
         )}
       </div>

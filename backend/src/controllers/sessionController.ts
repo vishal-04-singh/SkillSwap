@@ -111,6 +111,77 @@ export class SessionController {
       });
     }
   }
+
+  async getRequests(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.userId;
+      const role = req.user!.role;
+      const { status } = req.query;
+      
+      const requests = await sessionService.getRequests(userId, role, status as string | undefined);
+      
+      const formattedRequests = requests.map((r: any) => ({
+        ...r,
+        request_id: r.id,
+        requester_id: r.requesterId,
+        receiver_id: r.receiverId,
+        skill_id: r.skillId,
+        requester: r.requester ? { ...r.requester, user_id: r.requester.id } : undefined,
+        receiver: r.receiver ? { ...r.receiver, user_id: r.receiver.id } : undefined,
+        skill: r.skill ? { ...r.skill, skill_id: r.skill.id } : undefined,
+      }));
+      
+      res.json({
+        success: true,
+        data: formattedRequests,
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+
+  async respondToRequest(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.userId;
+      const requestId = req.params.id;
+      const { action, message } = req.body;
+      
+      const result = await sessionService.respondToRequest(requestId, userId, action, message);
+      res.json({
+        success: true,
+        data: result,
+        message: action === 'accepted' ? 'Request accepted!' : 'Request rejected',
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+
+  async requestReschedule(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.userId;
+      const sessionId = req.params.id;
+      const { new_date, reason } = req.body;
+      
+      const result = await sessionService.requestReschedule(sessionId, userId, new_date, reason);
+      res.json({
+        success: true,
+        data: result,
+        message: 'Reschedule request sent',
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
 }
 
 export const sessionController = new SessionController();

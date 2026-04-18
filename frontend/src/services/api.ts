@@ -33,6 +33,7 @@ export const authApi = {
   register: (data: any) => api.post('/auth/register', data),
   login: (data: any) => api.post('/auth/login', data),
   getProfile: () => api.get('/auth/profile'),
+  updateProfile: (data: any) => api.patch('/auth/profile', data),
 };
 
 export const skillsApi = {
@@ -44,6 +45,11 @@ export const skillsApi = {
   addSkill: (data: any) => api.post('/skills', data),
   updateSkill: (id: string, data: any) => api.patch(`/skills/${id}`, data),
   deleteSkill: (id: string) => api.delete(`/skills/${id}`),
+  getLearningGoals: () => api.get('/skills/learning-goals'),
+  addLearningGoal: (data: any) => api.post('/skills/learning-goals', data),
+  updateLearningGoal: (id: string, data: any) => api.patch(`/skills/learning-goals/${id}`, data),
+  deleteLearningGoal: (id: string) => api.delete(`/skills/learning-goals/${id}`),
+  getSuggestedMentors: (goalId: string) => api.get(`/skills/learning-goals/${goalId}/suggested-mentors`),
 };
 
 export const sessionsApi = {
@@ -52,6 +58,11 @@ export const sessionsApi = {
   create: (data: any) => api.post('/sessions', data),
   updateStatus: (id: string, status: string) => api.patch(`/sessions/${id}/status`, { status }),
   getStats: () => api.get('/sessions/stats'),
+  getRequests: (status?: string) => api.get('/sessions/requests', { params: { status } }),
+  respondToRequest: (id: string, action: 'accepted' | 'rejected', message?: string) => 
+    api.post(`/sessions/${id}/respond`, { action, message }),
+  requestReschedule: (id: string, new_date: string, reason?: string) => 
+    api.post(`/sessions/${id}/reschedule`, { new_date, reason }),
 };
 
 export const reviewsApi = {

@@ -87,8 +87,8 @@ export default function MySkills() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-normal mb-2" style={{ letterSpacing: '-0.02em' }}>My Skills</h1>
-            <p style={{ color: '#898989' }}>Showcase your expertise to help others learn.</p>
+            <h1 className="text-4xl font-normal mb-2 gradient-text" style={{ letterSpacing: '-0.02em' }}>My Skills</h1>
+            <p style={{ color: 'rgba(255,255,255,0.5)' }}>Showcase your expertise to help others learn.</p>
           </div>
           <button onClick={() => setModalOpen(true)} className="pill-btn pill-btn-primary flex items-center gap-2">
             <Plus size={18} />
@@ -98,7 +98,7 @@ export default function MySkills() {
 
         {loading ? (
           <div className="flex items-center justify-center h-64">
-            <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: '#3ecf8e', borderTopColor: 'transparent' }} />
+            <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(62,207,142,0.3)', borderTopColor: '#3ecf8e' }} />
           </div>
         ) : skills.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -107,16 +107,16 @@ export default function MySkills() {
                 key={userSkill.id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="card card-hover"
+                className="glass-card"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg" style={{ background: 'rgba(62, 207, 142, 0.15)' }}>
+                    <div className="p-3 rounded-xl" style={{ background: 'linear-gradient(135deg, rgba(62, 207, 142, 0.15) 0%, rgba(62, 207, 142, 0.05) 100%)' }}>
                       <BookOpen size={20} style={{ color: '#3ecf8e' }} />
                     </div>
                     <div>
                       <h3 className="font-medium">{userSkill.skill.name}</h3>
-                      <p className="text-sm" style={{ color: '#898989' }}>{userSkill.skill.category?.name}</p>
+                      <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>{userSkill.skill.category?.name}</p>
                     </div>
                   </div>
                   <button

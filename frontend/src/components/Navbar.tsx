@@ -22,28 +22,32 @@ export default function Navbar() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50" style={{ background: '#171717', borderBottom: '1px solid #242424' }}>
+    <nav className="fixed top-0 left-0 right-0 z-50 glass-strong">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/dashboard" className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#3ecf8e' }}>
-              <span className="text-black font-bold text-sm">SS</span>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #3ecf8e 0%, #2eb878 100%)' }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
+              <span className="text-black font-bold text-sm relative z-10">SS</span>
             </div>
-            <span className="font-sans font-medium text-lg" style={{ color: '#fafafa' }}>SkillSwap</span>
+            <span className="font-sans font-medium text-lg gradient-text">SkillSwap</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  isActive(item.path)
-                    ? 'text-black'
-                    : 'text-secondary hover:text-white'
-                }`}
-                style={isActive(item.path) ? { background: '#3ecf8e' } : {}}
-              >
+<Link
+                 key={item.path}
+                 to={item.path}
+                 className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                   isActive(item.path)
+                     ? 'text-black'
+                     : 'text-gray-400 hover:text-white'
+                 }`}
+                 style={isActive(item.path) ? { 
+                   background: 'linear-gradient(135deg, #3ecf8e 0%, #2eb878 100%)',
+                   boxShadow: '0 4px 20px rgba(62, 207, 142, 0.3)'
+                 } : {}}
+               >
                 <item.icon size={16} />
                 {item.label}
               </Link>

@@ -36,16 +36,16 @@ export default function Leaderboard() {
     <Layout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-4xl font-normal flex items-center gap-3 mb-2" style={{ letterSpacing: '-0.02em' }}>
-            <Trophy style={{ color: '#3ecf8e' }} />
+          <h1 className="text-4xl font-normal flex items-center gap-3 mb-2 gradient-text" style={{ letterSpacing: '-0.02em' }}>
+            <Trophy className="gradient-text" />
             Top Mentors
           </h1>
-          <p style={{ color: '#898989' }}>The best educators based on ratings and sessions.</p>
+          <p style={{ color: 'rgba(255,255,255,0.5)' }}>The best educators based on ratings and sessions.</p>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center h-64">
-            <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: '#3ecf8e', borderTopColor: 'transparent' }} />
+            <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(62,207,142,0.3)', borderTopColor: '#3ecf8e' }} />
           </div>
         ) : mentors.length > 0 ? (
           <div className="space-y-4">
@@ -55,8 +55,11 @@ export default function Leaderboard() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="card card-hover"
-                style={index < 3 ? { borderColor: 'rgba(62, 207, 142, 0.3)' } : {}}
+                className="glass-card"
+                style={index < 3 ? { 
+                  borderColor: 'rgba(62, 207, 142, 0.3)',
+                  boxShadow: index === 0 ? '0 0 40px rgba(62, 207, 142, 0.1)' : undefined
+                } : {}}
               >
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 flex items-center justify-center text-2xl font-normal">

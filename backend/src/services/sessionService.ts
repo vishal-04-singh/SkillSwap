@@ -218,6 +218,126 @@ export class SessionService {
       unread_notifications: unreadNotifications,
     };
   }
+
+  async getRequests(userId: string, role: string, status?: string) {
+    const whereClause: any = role === 'faculty'
+      ? { receiverId: userId }
+      : { requesterId: userId };
+
+    if (status) {
+      whereClause.status = status;
+    }
+
+    return prisma.mentorRequest.findMany({
+      where: whereClause,
+      include: {
+        requester: {
+          select: { id: true, full_name: true, email: true, department: true, avg_rating: true },
+        },
+        receiver: {
+          select: { id: true, full_name: true, email: true, department: true, avg_rating: true },
+        },
+        skill: {
+          include: { category: true },
+        },
+      },
+      orderBy: { created_at: 'desc' },
+    });
+  }
+
+  async respondToRequest(requestId: string, userId: string, action: 'accepted' | 'rejected', message?: string) {
+    const request = await prisma.mentorRequest.findUnique({
+      where: { id: requestId },
+      include: { skill: true },
+    });
+
+    if (!request) {
+      throw new Error('Request not found');
+    }
+
+    if (request.receiverId !== userId) {
+      throw new Error('Unauthorized to respond to this request');
+    }
+
+    if (request.status !== 'pending') {
+      throw new Error('Request has already been processed');
+    }
+
+    const skillName = request.skill?.name || 'the requested skill';
+
+    const updatedRequest = await prisma.mentorRequest.update({
+      where: { id: requestId },
+      data: { status: action },
+      include: {
+        requester: { select: { id: true, full_name: true } },
+        skill: true,
+      },
+    });
+
+    const notificationMessage = action === 'accepted'
+      ? `Your request to learn ${skillName} has been accepted!`
+      : `Your request to learn ${skillName} has been declined.`;
+
+    await prisma.notification.create({
+      data: {
+        userId: request.requesterId,
+        message: notificationMessage,
+        is_read: false,
+      },
+    });
+
+    if (action === 'accepted') {
+      await prisma.skillSession.create({
+        data: {
+          mentorId: userId,
+          menteeId: request.requesterId,
+          skillId: request.skillId,
+          title: `${skillName} Session`,
+          description: message || undefined,
+          scheduled_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+          status: 'confirmed',
+        },
+      });
+    }
+
+    return updatedRequest;
+  }
+
+  async requestReschedule(sessionId: string, userId: string, newDate: string, reason?: string) {
+    const session = await prisma.skillSession.findUnique({
+      where: { id: sessionId },
+    });
+
+    if (!session) {
+      throw new Error('Session not found');
+    }
+
+    if (session.mentorId !== userId && session.menteeId !== userId) {
+      throw new Error('Unauthorized to reschedule this session');
+    }
+
+    if (!['pending', 'confirmed'].includes(session.status)) {
+      throw new Error('Cannot reschedule a completed or cancelled session');
+    }
+
+    const isMentor = session.mentorId === userId;
+    const otherUserId = isMentor ? session.menteeId : session.mentorId;
+
+    await prisma.skillSession.update({
+      where: { id: sessionId },
+      data: { scheduled_date: new Date(newDate) },
+    });
+
+    await prisma.notification.create({
+      data: {
+        userId: otherUserId,
+        message: `Session rescheduled to ${new Date(newDate).toLocaleString()}. Reason: ${reason || 'Not provided'}`,
+        is_read: false,
+      },
+    });
+
+    return { success: true };
+  }
 }
 
 export const sessionService = new SessionService();

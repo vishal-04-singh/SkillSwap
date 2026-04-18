@@ -28,21 +28,23 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#171717' }}>
+    <div className="min-h-screen flex items-center justify-center p-4 relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-[rgba(62,207,142,0.03)] pointer-events-none" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md"
+        className="w-full max-w-md relative"
       >
-        <div className="text-center mb-10">
-          <div className="rounded-2xl flex items-center justify-center mx-auto mb-5" >
-            <img src="/logo_text.jpeg" alt="SkillSwap Logo" className="w-400 h-10 object-contain" />
+        <div className="glass-card p-10 rounded-3xl">
+          <div className="text-center mb-10">
+            <div className="rounded-2xl flex items-center justify-center mx-auto mb-5 w-12 h-12" style={{ background: 'linear-gradient(135deg, #3ecf8e 0%, #2eb878 100%)' }}>
+              <span className="text-black font-bold text-lg">SS</span>
+            </div>
+            <h1 className="text-4xl font-normal mb-3 gradient-text" style={{ letterSpacing: '-0.02em' }}>Welcome back</h1>
+            <p className="text-lg" style={{ color: 'rgba(255,255,255,0.5)' }}>Sign in to continue</p>
           </div>
-          <h1 className="text-4xl font-normal mb-3" style={{ letterSpacing: '-0.02em' }}>Welcome back</h1>
-          <p className="text-lg" style={{ color: '#898989' }}>Sign in to your SkillSwap account</p>
-        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="label">Email</label>
             <input
@@ -70,18 +72,19 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="pill-btn pill-btn-primary w-full disabled:opacity-50"
+            className="glow-button w-full disabled:opacity-50"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
-        </form>
+          </form>
 
-        <p className="text-center mt-6" style={{ color: '#898989' }}>
+        <p className="text-center mt-6" style={{ color: 'rgba(255,255,255,0.5)' }}>
           Don't have an account?{' '}
-          <Link to="/register" className="font-medium" style={{ color: '#3ecf8e' }}>
+          <Link to="/register" className="font-medium gradient-text">
             Register here
           </Link>
         </p>
+        </div>
       </motion.div>
     </div>
   );

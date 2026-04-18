@@ -29,10 +29,12 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
           onClick={(e) => e.stopPropagation()}
           className="w-full max-w-lg"
           style={{ 
-            background: '#171717', 
-            border: '1px solid #2e2e2e', 
-            borderRadius: '16px',
-            padding: '24px'
+            background: 'linear-gradient(135deg, rgba(30, 30, 45, 0.95) 0%, rgba(20, 20, 32, 0.95) 100%)',
+            backdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.08)', 
+            borderRadius: '20px',
+            padding: '28px',
+            boxShadow: '0 24px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(62, 207, 142, 0.05)'
           }}
         >
           <div className="flex items-center justify-between mb-6">

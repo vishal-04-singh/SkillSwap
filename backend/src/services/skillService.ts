@@ -149,6 +149,115 @@ export class SkillService {
       },
     });
   }
+
+  async getLearningGoals(userId: string) {
+    return prisma.learningGoal.findMany({
+      where: { userId },
+      include: {
+        skill: {
+          include: { category: true },
+        },
+      },
+      orderBy: [{ priority: 'desc' }, { created_at: 'desc' }],
+    });
+  }
+
+  async addLearningGoal(userId: string, skillId: string, description?: string, priority?: string) {
+    return prisma.learningGoal.create({
+      data: {
+        userId,
+        skillId,
+        description,
+        priority: priority || 'medium',
+      },
+      include: {
+        skill: {
+          include: { category: true },
+        },
+      },
+    });
+  }
+
+  async updateLearningGoal(goalId: string, userId: string, status?: string, priority?: string) {
+    const goal = await prisma.learningGoal.findFirst({
+      where: { id: goalId, userId },
+    });
+
+    if (!goal) {
+      throw new Error('Learning goal not found');
+    }
+
+    return prisma.learningGoal.update({
+      where: { id: goalId },
+      data: {
+        ...(status && { status }),
+        ...(priority && { priority }),
+      },
+      include: {
+        skill: {
+          include: { category: true },
+        },
+      },
+    });
+  }
+
+  async deleteLearningGoal(goalId: string, userId: string) {
+    const goal = await prisma.learningGoal.findFirst({
+      where: { id: goalId, userId },
+    });
+
+    if (!goal) {
+      throw new Error('Learning goal not found');
+    }
+
+    await prisma.learningGoal.delete({
+      where: { id: goalId },
+    });
+
+    return { message: 'Learning goal removed' };
+  }
+
+  async getSuggestedMentorsForGoal(goalId: string) {
+    const goal = await prisma.learningGoal.findUnique({
+      where: { id: goalId },
+      include: { skill: true },
+    });
+
+    if (!goal) {
+      throw new Error('Learning goal not found');
+    }
+
+    const mentors = await prisma.user.findMany({
+      where: {
+        role: 'faculty',
+        user_skills: {
+          some: { skillId: goal.skillId },
+        },
+      },
+      select: {
+        id: true,
+        full_name: true,
+        department: true,
+        avg_rating: true,
+        user_skills: {
+          where: { skillId: goal.skillId },
+          include: { skill: true },
+        },
+      },
+      orderBy: { avg_rating: 'desc' },
+      take: 5,
+    });
+
+    return mentors.map((m) => ({
+      ...m,
+      user_id: m.id,
+      user_skills: m.user_skills.map((us) => ({
+        ...us,
+        user_skill_id: us.id,
+        skill_id: us.skillId,
+      })),
+    }));
+  }
 }
 
 export const skillService = new SkillService();

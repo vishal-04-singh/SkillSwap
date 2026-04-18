@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, BookOpen, User, Star } from 'lucide-react';
 import Layout from '../components/Layout';
 import Modal from '../components/Modal';
-
 import { skillsApi, sessionsApi } from '../services/api';
 import toast from 'react-hot-toast';
 import { UserSkill } from '../types';
@@ -60,62 +59,68 @@ export default function BookSession() {
     }
   };
 
-  
-
   return (
     <Layout>
       <div className="space-y-6">
         <div>
-          <Link to="/browse" className="flex items-center gap-2 text-zinc-400 hover:text-white mb-4">
+          <Link to="/browse" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-4 transition-colors">
             <ArrowLeft size={18} />
-            Back to Browse
+            <span className="text-sm">Back to Browse</span>
           </Link>
-          <h1 className="text-3xl font-bold">Book a Session</h1>
-          <p className="text-zinc-400 mt-1">Select a skill and schedule your learning session.</p>
+          <h1 className="text-4xl font-normal mb-2 gradient-text" style={{ letterSpacing: '-0.02em' }}>Book a Session</h1>
+          <p style={{ color: 'rgba(255,255,255,0.5)' }}>Select a skill and schedule your learning session.</p>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center h-64">
-            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(62,207,142,0.3)', borderTopColor: '#3ecf8e' }} />
           </div>
         ) : (
-          <>
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Available Skills</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {mentorSkills.map((us) => (
-                  <motion.div
-                    key={us.id}
-                    whileHover={{ scale: 1.02 }}
-                    className="card card-hover cursor-pointer"
-                    onClick={() => {
-                      setSelectedSkill(us);
-                      setFormData({ ...formData, title: `${us.skill.name} Session` });
-                      setModalOpen(true);
-                    }}
-                  >
-                    <h3 className="font-semibold text-lg">{us.skill.name}</h3>
-                    <p className="text-sm text-zinc-400">{us.skill.category?.name}</p>
-                    <div className="mt-3 flex items-center gap-3 text-sm">
-                      <span className="px-2 py-1 bg-surface rounded-full capitalize">
-                        {us.proficiency_level}
-                      </span>
-                      <span className="text-zinc-400">
-                        {us.years_of_experience} years
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {mentorSkills.map((us) => (
+              <motion.div
+                key={us.id}
+                whileHover={{ scale: 1.02, borderColor: 'rgba(62, 207, 142, 0.5)' }}
+                whileTap={{ scale: 0.98 }}
+                className="elevated-card cursor-pointer p-5"
+                onClick={() => {
+                  setSelectedSkill(us);
+                  setFormData({ ...formData, title: `${us.skill.name} Session` });
+                  setModalOpen(true);
+                }}
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="p-3 rounded-xl" style={{ background: 'rgba(62, 207, 142, 0.15)' }}>
+                    <BookOpen size={22} style={{ color: '#3ecf8e' }} />
+                  </div>
+                  <span className="px-2 py-1 rounded-full text-xs capitalize" style={{ 
+                    background: 'rgba(120, 64, 255, 0.15)', 
+                    color: '#7840ff',
+                    border: '1px solid rgba(120, 64, 255, 0.3)'
+                  }}>
+                    {us.proficiency_level}
+                  </span>
+                </div>
+                
+                <h3 className="font-normal text-lg mb-1" style={{ letterSpacing: '-0.02em' }}>{us.skill.name}</h3>
+                <p className="text-sm mb-3" style={{ color: '#555' }}>{us.skill.category?.name}</p>
+                
+                <div className="flex items-center gap-3 text-sm" style={{ color: '#555' }}>
+                  <div className="flex items-center gap-1">
+                    <Clock size={14} />
+                    <span>{us.years_of_experience} years</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         )}
       </div>
 
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={`Book: ${selectedSkill?.skill.name}`}
+        title={selectedSkill ? `Book: ${selectedSkill.skill.name}` : 'Book Session'}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -170,7 +175,8 @@ export default function BookSession() {
             </div>
           </div>
 
-          <button type="submit" className="pill-btn pill-btn-primary w-full mt-6">
+          <button type="submit" className="pill-btn pill-btn-primary w-full mt-6 flex items-center justify-center gap-2">
+            <Calendar size={18} />
             Request Session
           </button>
         </form>

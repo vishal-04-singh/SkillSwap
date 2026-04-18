@@ -10,6 +10,9 @@ import Sessions from './pages/Sessions';
 import BookSession from './pages/BookSession';
 import Leaderboard from './pages/Leaderboard';
 import Notifications from './pages/Notifications';
+import Requests from './pages/Requests';
+import Profile from './pages/Profile';
+import Favorites from './pages/Favorites';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -60,6 +63,9 @@ function AppRoutes() {
       <Route path="/sessions/book/:mentorId" element={<ProtectedRoute><BookSession /></ProtectedRoute>} />
       <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
       <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+      <Route path="/requests" element={<ProtectedRoute><Requests /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+      <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
       
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />

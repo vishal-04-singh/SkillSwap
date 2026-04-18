@@ -50,6 +50,24 @@ export class AuthController {
       });
     }
   }
+
+  async updateProfile(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.userId;
+      const { full_name, department, bio } = req.body;
+      const user = await authService.updateProfile(userId, { full_name, department, bio });
+      res.json({
+        success: true,
+        data: user,
+        message: 'Profile updated successfully',
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
 }
 
 export const authController = new AuthController();

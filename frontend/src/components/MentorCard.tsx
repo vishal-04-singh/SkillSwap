@@ -1,31 +1,65 @@
 import { motion } from 'framer-motion';
 import { Star, MapPin, BookOpen } from 'lucide-react';
 import { User, UserSkill } from '../types';
+import toast from 'react-hot-toast';
 
 interface MentorCardProps {
   mentor: User & { user_skills?: UserSkill[] };
   onSelect?: () => void;
   showSkills?: boolean;
+  showFavorite?: boolean;
 }
 
-export default function MentorCard({ mentor, onSelect, showSkills = true }: MentorCardProps) {
+export default function MentorCard({ mentor, onSelect, showSkills = true, showFavorite = false }: MentorCardProps) {
   const skills = mentor.user_skills?.slice(0, 3) || [];
+
+  const handleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const stored = localStorage.getItem('favorites');
+    const favs: string[] = stored ? JSON.parse(stored) : [];
+    
+    if (favs.includes(mentor.user_id)) {
+      const newFavs = favs.filter(id => id !== mentor.user_id);
+      localStorage.setItem('favorites', JSON.stringify(newFavs));
+      toast.success('Removed from favorites');
+    } else {
+      localStorage.setItem('favorites', JSON.stringify([...favs, mentor.user_id]));
+      toast.success('Added to favorites');
+    }
+  };
 
   return (
     <motion.div
       whileHover={{ scale: 1.02, borderColor: 'rgba(62, 207, 142, 0.5)' }}
-      className="card card-hover cursor-pointer"
+      className="elevated-card cursor-pointer p-5 relative group"
       onClick={onSelect}
     >
+      {showFavorite && (
+        <button
+          onClick={handleFavorite}
+          className="absolute top-4 right-4 p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300"
+          style={{ 
+            background: 'rgba(255, 255, 255, 0.05)', 
+            color: '#b4b4b4' 
+          }}
+        >
+          <Star size={16} fill="currentColor" />
+        </button>
+      )}
+      
       <div className="flex items-start gap-4">
-        <div className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-medium" style={{ background: '#3ecf8e', color: '#0f0f0f' }}>
+        <div className="w-14 h-14 rounded-xl flex items-center justify-center text-xl font-medium" style={{ 
+          background: 'linear-gradient(135deg, #3ecf8e 0%, #2eb878 100%)', 
+          color: '#0a0a0f',
+          boxShadow: '0 4px 20px rgba(62, 207, 142, 0.3)'
+        }}>
           {mentor.full_name.split(' ').map(n => n[0]).join('')}
         </div>
         
         <div className="flex-1 min-w-0">
           <h3 className="font-normal text-lg" style={{ letterSpacing: '-0.02em' }}>{mentor.full_name}</h3>
           
-          <div className="flex items-center gap-4 mt-1 text-sm" style={{ color: '#898989' }}>
+          <div className="flex items-center gap-4 mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
             {mentor.department && (
               <span className="flex items-center gap-1">
                 <MapPin size={14} />
@@ -33,7 +67,7 @@ export default function MentorCard({ mentor, onSelect, showSkills = true }: Ment
               </span>
             )}
             {mentor.avg_rating ? (
-              <span className="flex items-center gap-1" style={{ color: '#3ecf8e' }}>
+              <span className="flex items-center gap-1 gradient-text">
                 <Star size={14} fill="#3ecf8e" />
                 {Number(mentor.avg_rating).toFixed(1)}
               </span>
@@ -45,8 +79,12 @@ export default function MentorCard({ mentor, onSelect, showSkills = true }: Ment
               {skills.map((us) => (
                 <span
                   key={us.id}
-                  className="px-2 py-1 rounded-full text-xs flex items-center gap-1"
-                  style={{ background: '#0f0f0f', color: '#b4b4b4' }}
+                  className="px-3 py-1 rounded-full text-xs flex items-center gap-1"
+                  style={{ 
+                    background: 'rgba(62, 207, 142, 0.1)', 
+                    border: '1px solid rgba(62, 207, 142, 0.2)',
+                    color: '#3ecf8e'
+                  }}
                 >
                   <BookOpen size={10} />
                   {us.skill.name}

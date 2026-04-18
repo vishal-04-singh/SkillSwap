@@ -14,4 +14,10 @@ router.post('/', authenticate, validate(userSkillSchema), skillController.addUse
 router.patch('/:id', authenticate, skillController.updateUserSkill.bind(skillController));
 router.delete('/:id', authenticate, skillController.deleteUserSkill.bind(skillController));
 
+router.get('/learning-goals', authenticate, skillController.getLearningGoals.bind(skillController));
+router.post('/learning-goals', authenticate, skillController.addLearningGoal.bind(skillController));
+router.patch('/learning-goals/:id', authenticate, skillController.updateLearningGoal.bind(skillController));
+router.delete('/learning-goals/:id', authenticate, skillController.deleteLearningGoal.bind(skillController));
+router.get('/learning-goals/:id/suggested-mentors', authenticate, skillController.getSuggestedMentorsForGoal.bind(skillController));
+
 export default router;

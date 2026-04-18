@@ -1,21 +1,34 @@
-import { ReactNode, useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 import { 
   Home, BookOpen, Users, Calendar, Trophy, Bell, LogOut, Menu, X, 
-  Send, Star, User, ChevronLeft
+  ChevronLeft, ChevronRight, Send, Star
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useState, useEffect } from 'react';
 
-interface LayoutProps {
-  children: ReactNode;
+interface SidebarProps {
+  children: React.ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps) {
+export default function Sidebar({ children }: SidebarProps) {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setCollapsed(true);
+        setMobileOpen(false);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     setMobileOpen(false);
@@ -29,7 +42,7 @@ export default function Layout({ children }: LayoutProps) {
     { path: '/requests', label: 'Requests', icon: Send, roles: ['faculty'] },
     { path: '/favorites', label: 'Favorites', icon: Star, roles: ['student'] },
     { path: '/leaderboard', label: 'Leaderboard', icon: Trophy },
-    { path: '/notifications', label: 'Notifications', icon: Bell },
+    { path: '/notifications', label: 'Notifications', icon: Bell, badge: true },
   ];
 
   const filteredNavItems = navItems.filter(item => 
@@ -38,13 +51,8 @@ export default function Layout({ children }: LayoutProps) {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   return (
-    <div className="min-h-screen flex" style={{ background: '#0f0f0f' }}>
+    <div className="min-h-screen" style={{ background: '#0f0f0f' }}>
       <button
         onClick={() => setMobileOpen(true)}
         className="fixed top-20 left-4 z-40 p-2 rounded-xl transition-all duration-300 hover:scale-105"
@@ -114,13 +122,18 @@ export default function Layout({ children }: LayoutProps) {
               >
                 <item.icon size={20} className="flex-shrink-0" />
                 <span>{item.label}</span>
+                {item.badge && (
+                  <span className="ml-auto px-2 py-0.5 rounded-full text-xs" style={{ background: '#ff4060', color: 'white' }}>
+                    New
+                  </span>
+                )}
               </Link>
             ))}
           </nav>
           
           <div className="mt-6 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
             <p className="px-4 text-xs font-medium uppercase tracking-wider mb-2" style={{ color: '#555' }}>
-              Account
+              Quick Links
             </p>
             <div className="space-y-1">
               <Link
@@ -149,7 +162,10 @@ export default function Layout({ children }: LayoutProps) {
           </div>
           
           <button
-            onClick={handleLogout}
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
             className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-red-500/10"
             style={{ color: '#ff4060' }}
           >
@@ -159,12 +175,16 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       </motion.aside>
 
-      <div className="flex-1 transition-all duration-300 md:ml-72">
-        <nav className="fixed top-0 right-0 z-40 h-16 flex items-center justify-end px-6" style={{ 
+      <motion.div
+        initial={false}
+        animate={{ paddingLeft: window.innerWidth >= 768 ? 280 : 0 }}
+        className="min-h-screen transition-all duration-300"
+      >
+        <nav className="fixed top-0 right-0 left-0 z-40 h-16 flex items-center justify-end px-6" style={{ 
           background: 'rgba(10, 10, 10, 0.8)',
           backdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(255,255,255,0.05)',
-          left: 0
+          left: window.innerWidth >= 768 ? 280 : 0
         }}>
           <div className="flex items-center gap-4">
             <Link
@@ -199,7 +219,9 @@ export default function Layout({ children }: LayoutProps) {
             {children}
           </motion.div>
         </main>
-      </div>
+      </motion.div>
     </div>
   );
 }
+
+import { User } from 'lucide-react';

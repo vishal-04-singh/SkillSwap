@@ -78,6 +78,21 @@ export class AuthService {
 
     return { ...userWithoutPassword, user_id: user.id };
   }
+
+  async updateProfile(userId: string, data: { full_name?: string; department?: string; bio?: string }) {
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        full_name: data.full_name,
+        department: data.department,
+        bio: data.bio,
+      },
+    });
+
+    const { password_hash, ...userWithoutPassword } = user;
+
+    return { ...userWithoutPassword, user_id: user.id };
+  }
 }
 
 export const authService = new AuthService();

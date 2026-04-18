@@ -101,3 +101,28 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
 }
+
+export interface LearningGoal {
+  id: string;
+  userId: string;
+  skillId: string;
+  description: string | null;
+  status: 'wanted' | 'learning' | 'completed';
+  priority: 'low' | 'medium' | 'high';
+  created_at: string;
+  skill: Skill;
+}
+
+export interface MentorRequest {
+  request_id: string;
+  id?: string;
+  requester_id: string;
+  receiver_id: string;
+  skill_id: string;
+  message: string | null;
+  status: 'pending' | 'accepted' | 'rejected';
+  created_at: string;
+  requester: Pick<User, 'user_id' | 'full_name' | 'email' | 'department' | 'avg_rating'>;
+  receiver: Pick<User, 'user_id' | 'full_name' | 'email' | 'department'>;
+  skill: Skill;
+}

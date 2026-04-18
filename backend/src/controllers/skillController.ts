@@ -152,6 +152,92 @@ export class SkillController {
       });
     }
   }
+
+  async getLearningGoals(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.userId;
+      const goals = await skillService.getLearningGoals(userId);
+      res.json({
+        success: true,
+        data: goals,
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+
+  async addLearningGoal(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.userId;
+      const { skill_id, description, priority } = req.body;
+      const goal = await skillService.addLearningGoal(userId, skill_id, description, priority);
+      res.status(201).json({
+        success: true,
+        data: goal,
+        message: 'Learning goal added',
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+
+  async updateLearningGoal(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.userId;
+      const goalId = req.params.id;
+      const { status, priority } = req.body;
+      const goal = await skillService.updateLearningGoal(goalId, userId, status, priority);
+      res.json({
+        success: true,
+        data: goal,
+        message: 'Learning goal updated',
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+
+  async deleteLearningGoal(req: AuthRequest, res: Response) {
+    try {
+      const userId = req.user!.userId;
+      const goalId = req.params.id;
+      await skillService.deleteLearningGoal(goalId, userId);
+      res.json({
+        success: true,
+        message: 'Learning goal removed',
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+
+  async getSuggestedMentorsForGoal(req: AuthRequest, res: Response) {
+    try {
+      const goalId = req.params.id;
+      const mentors = await skillService.getSuggestedMentorsForGoal(goalId);
+      res.json({
+        success: true,
+        data: mentors,
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
 }
 
 export const skillController = new SkillController();

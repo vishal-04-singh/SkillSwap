@@ -16,13 +16,18 @@ model User {
   role          String    @default("student")
   department    String?
   avg_rating    Float     @default(0)
+  bio           String?
+  avatar_url   String?
   created_at    DateTime  @default(now())
 
-  user_skills       UserSkill[]
+  user_skills        UserSkill[]
   mentor_sessions   SkillSession[] @relation("MentorSessions")
   mentee_sessions   SkillSession[] @relation("MenteeSessions")
   reviews           SessionReview[] @relation("ReviewerReviews")
   notifications     Notification[]
+  learning_goals   LearningGoal[]
+  sent_requests    MentorRequest[] @relation("RequesterRequests")
+  received_requests MentorRequest[] @relation("ReceiverRequests")
 }
 
 model SkillCategory {
@@ -38,8 +43,10 @@ model Skill {
   categoryId String?       @db.ObjectId
   category   SkillCategory? @relation(fields: [categoryId], references: [id])
 
-  user_skills UserSkill[]
-  sessions    SkillSession[]
+  user_skills       UserSkill[]
+  sessions        SkillSession[]
+  learning_goals   LearningGoal[]
+  mentor_requests MentorRequest[]
 }
 
 model UserSkill {
@@ -93,4 +100,31 @@ model Notification {
   created_at DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LearningGoal {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  skillId     String   @db.ObjectId
+  description String?
+  status      String   @default("wanted") // wanted, learning, completed
+  priority    String   @default("medium") // low, medium, high
+  created_at  DateTime  @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+}
+
+model MentorRequest {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  requesterId String   @db.ObjectId
+  receiverId String   @db.ObjectId
+  skillId    String   @db.ObjectId
+  message    String?
+  status     String   @default("pending") // pending, accepted, rejected
+  created_at DateTime  @default(now())
+
+  requester User  @relation("RequesterRequests", fields: [requesterId], references: [id], onDelete: Cascade)
+  receiver  User  @relation("ReceiverRequests", fields: [receiverId], references: [id], onDelete: Cascade)
+  skill     Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
 }

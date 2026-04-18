@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
+import { skillsApi } from '../services/api';
+import { Skill, SkillCategory } from '../types';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -13,9 +15,34 @@ export default function Register() {
     role: 'student',
     department: '',
   });
+  const [learningSkill, setLearningSkill] = useState('');
+  const [categories, setCategories] = useState<SkillCategory[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchSkillsData();
+  }, []);
+
+  const fetchSkillsData = async () => {
+    try {
+      const [catsRes, skillsRes] = await Promise.all([
+        skillsApi.getCategories(),
+        skillsApi.getAll(),
+      ]);
+      setCategories(catsRes.data.data);
+      setSkills(skillsRes.data.data);
+    } catch (error) {
+      console.error('Failed to load skills:', error);
+    }
+  };
+
+  const filteredSkills = selectedCategory
+    ? skills.filter((s) => s.categoryId === selectedCategory)
+    : skills;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,7 +53,20 @@ export default function Register() {
     setLoading(true);
     
     try {
-      await register(formData);
+      const userData = { ...formData };
+      await register(userData);
+      
+      if (learningSkill && formData.role === 'student') {
+        try {
+          await skillsApi.addLearningGoal({
+            skill_id: learningSkill,
+            priority: 'high',
+          });
+        } catch (goalError) {
+          console.error('Failed to add learning goal:', goalError);
+        }
+      }
+      
       toast.success('Account created successfully!');
       navigate('/dashboard');
     } catch (error: any) {
@@ -38,45 +78,47 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#171717' }}>
+    <div className="min-h-screen flex items-center justify-center p-4 relative">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md"
+        className="w-full max-w-lg relative"
       >
-        <div className="text-center mb-10">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: '#3ecf8e' }}>
-            <span className="text-black font-bold text-2xl">SS</span>
+        <div className="glass-card p-10 rounded-3xl">
+          <div className="text-center mb-8">
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: 'linear-gradient(135deg, #3ecf8e 0%, #2eb878 100%)' }}>
+              <span className="text-black font-bold text-xl">SS</span>
+            </div>
+            <h1 className="text-4xl font-normal mb-3 gradient-text" style={{ letterSpacing: '-0.02em' }}>Join SkillSwap</h1>
+            <p className="text-lg" style={{ color: 'rgba(255,255,255,0.5)' }}>Create your account and start learning</p>
           </div>
-          <h1 className="text-4xl font-normal mb-3" style={{ letterSpacing: '-0.02em' }}>Join SkillSwap</h1>
-          <p className="text-lg" style={{ color: '#898989' }}>Create your account and start learning</p>
-        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="label">Roll Number</label>
-            <input
-              type="text"
-              name="roll_number"
-              value={formData.roll_number}
-              onChange={handleChange}
-              className="input-field"
-              placeholder="MCA2024001"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="label">Full Name</label>
-            <input
-              type="text"
-              name="full_name"
-              value={formData.full_name}
-              onChange={handleChange}
-              className="input-field"
-              placeholder="John Doe"
-              required
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="label">Roll Number</label>
+              <input
+                type="text"
+                name="roll_number"
+                value={formData.roll_number}
+                onChange={handleChange}
+                className="input-field"
+                placeholder="MCA2024001"
+                required
+              />
+            </div>
+            <div>
+              <label className="label">Full Name</label>
+              <input
+                type="text"
+                name="full_name"
+                value={formData.full_name}
+                onChange={handleChange}
+                className="input-field"
+                placeholder="John Doe"
+                required
+              />
+            </div>
           </div>
 
           <div>
@@ -132,21 +174,62 @@ export default function Register() {
             </div>
           </div>
 
+          {formData.role === 'student' && (
+            <div className="p-5 rounded-xl" style={{ 
+              background: 'linear-gradient(135deg, rgba(120, 64, 255, 0.08) 0%, rgba(62, 207, 142, 0.05) 100%)',
+              border: '1px solid rgba(120, 64, 255, 0.15)'
+            }}>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-lg">🎯</span>
+                <label className="label mb-0">I want to learn</label>
+              </div>
+              <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                Select a skill you're interested in learning - we'll help you find mentors!
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value);
+                    setLearningSkill('');
+                  }}
+                  className="input-field text-sm"
+                >
+                  <option value="">All Categories</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
+                <select
+                  value={learningSkill}
+                  onChange={(e) => setLearningSkill(e.target.value)}
+                  className="input-field text-sm"
+                >
+                  <option value="">Pick a skill...</option>
+                  {filteredSkills.map((skill) => (
+                    <option key={skill.id} value={skill.id}>{skill.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+
           <button
             type="submit"
             disabled={loading}
-            className="pill-btn pill-btn-primary w-full disabled:opacity-50"
+            className="glow-button w-full disabled:opacity-50"
           >
             {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 
-        <p className="text-center mt-6" style={{ color: '#898989' }}>
+        <p className="text-center mt-6" style={{ color: 'rgba(255,255,255,0.5)' }}>
           Already have an account?{' '}
-          <Link to="/login" className="font-medium" style={{ color: '#3ecf8e' }}>
+          <Link to="/login" className="font-medium gradient-text">
             Sign in
           </Link>
         </p>
+        </div>
       </motion.div>
     </div>
   );
