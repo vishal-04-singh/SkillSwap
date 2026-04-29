@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { Search, Users } from 'lucide-react';
 import Layout from '../components/Layout';
 import MentorCard from '../components/MentorCard';
@@ -68,9 +69,23 @@ export default function BrowseMentors() {
   return (
     <Layout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-4xl font-normal mb-2 gradient-text" style={{ letterSpacing: '-0.02em' }}>Browse Mentors</h1>
-          <p style={{ color: 'rgba(255,255,255,0.5)' }}>Find experts to learn from.</p>
+        <div className="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <h1 className="text-4xl font-normal mb-2 gradient-text" style={{ letterSpacing: '-0.02em' }}>Browse Mentors</h1>
+            <p style={{ color: 'rgba(255,255,255,0.5)' }}>Find experts to learn from.</p>
+          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="hidden md:block"
+          >
+            <img 
+              src="public/images/m.jpg" 
+              alt="Mentorship"
+              className="rounded-2xl shadow-2xl w-[700px] h-[180px] object-cover opacity-50"
+            />
+          </motion.div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4">

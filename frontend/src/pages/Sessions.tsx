@@ -94,20 +94,19 @@ export default function Sessions() {
     { id: 'pending', label: 'Pending', count: sessions.filter(s => s.status === 'pending').length },
   ] as const;
 
-  return (
+   return (
     <Layout>
       <div className="space-y-6">
         <Link to="/dashboard" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-4 transition-colors">
           <ArrowLeft size={18} />
           <span className="text-sm">Back to Dashboard</span>
         </Link>
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-normal mb-2 gradient-text" style={{ letterSpacing: '-0.02em' }}>My Sessions</h1>
-            <p style={{ color: 'rgba(255,255,255,0.5)' }}>Manage your learning and mentoring sessions.</p>
-          </div>
-          
-          <div className="flex gap-2 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
+        <div>
+          <h1 className="text-4xl font-normal mb-2 gradient-text" style={{ letterSpacing: '-0.02em' }}>My Sessions</h1>
+          <p style={{ color: 'rgba(255,255,255,0.5)' }}>Manage your learning and mentoring sessions.</p>
+        </div>
+        
+        <div className="flex gap-2 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
             <button
               onClick={() => setViewMode('list')}
               className="p-2 rounded-lg transition-all duration-300"
@@ -281,9 +280,8 @@ export default function Sessions() {
                 : 'Your session history will appear here.'}
             </p>
           </div>
-        )}
-      </div>
-
+          )}
+        
       <Modal
         isOpen={reviewModal.open}
         onClose={() => setReviewModal({ open: false, session: null })}
